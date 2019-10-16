@@ -1,9 +1,11 @@
 package main
 
 import (
+	"blueprint/chat_01/trace"
 	"flag"
 	"log"
 	"net/http"
+	"os"
 	"path/filepath"
 	"sync"
 	"text/template"
@@ -31,6 +33,7 @@ func main() {
 	http.Handle("/", &templateHandler{filename: "chat.html"})
 	// room
 	r := newRoom()
+	r.tracer = trace.New(os.Stdout)
 	http.Handle("/room", r)
 	// get the room going
 	go r.run()
