@@ -14,6 +14,7 @@ import (
 	"github.com/stretchr/gomniauth/providers/facebook"
 	"github.com/stretchr/gomniauth/providers/github"
 	"github.com/stretchr/gomniauth/providers/google"
+	"github.com/stretchr/objx"
 )
 
 // templ represents a single template
@@ -28,7 +29,13 @@ func (t *templateHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	t.once.Do(func() {
 		t.templ = template.Must(template.ParseFiles(filepath.Join("templates", t.filename)))
 	})
-	t.templ.Execute(w, r)
+	data := map[string]interface{}{
+		"Host": r.Host,
+	}
+	if authCookie, err := r.Cookie("auth"); err == nil {
+		data["UserData"] = objx.MustFromBase64(authCookie.Value)
+	}
+	t.templ.Execute(w, data)
 }
 
 func main() {
@@ -38,12 +45,12 @@ func main() {
 	// setup gomniauth
 	gomniauth.SetSecurityKey("#^dDUR5/NSdSs/k)")
 	gomniauth.WithProviders(
-		facebook.New("516301198069-io33qbi2edp7360rf7h55tgbp2sa379q.apps.googleusercontent.com",
-			"TBKKQ6TZeEN4byopoICIxkdS",
+		facebook.New("1436924783128043", "0d41658904a190e801eca338bc4661b3",
 			"http://localhost:8080/auth/callback/facebook"),
-		github.New("key", "secret",
+		github.New("9775560193e90fecd960", "656ce77b85ebe1b3d8b2fa0a6b11cddc561a9800",
 			"http://localhost:8080/auth/callback/github"),
-		google.New("key", "secret",
+		google.New("516301198069-io33qbi2edp7360rf7h55tgbp2sa379q.apps.googleusercontent.com",
+			"TBKKQ6TZeEN4byopoICIxkdS",
 			"http://localhost:8080/auth/callback/google"),
 	)
 
