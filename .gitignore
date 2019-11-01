@@ -1,5 +1,8 @@
-# Created by https://www.gitignore.io/api/go,visualstudiocode
-# Edit at https://www.gitignore.io/?templates=go,visualstudiocode
+# Created by https://www.gitignore.io/api/go,dotenv,visualstudiocode
+# Edit at https://www.gitignore.io/?templates=go,dotenv,visualstudiocode
+
+### dotenv ###
+.env
 
 ### Go ###
 # Binaries for programs and plugins
@@ -33,4 +36,4 @@
 # Ignore all local history of files
 .history
 
-# End of https://www.gitignore.io/api/go,visualstudiocode
+# End of https://www.gitignore.io/api/go,dotenv,visualstudiocode

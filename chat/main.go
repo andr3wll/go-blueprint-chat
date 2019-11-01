@@ -10,6 +10,7 @@ import (
 	"sync"
 	"text/template"
 
+	"github.com/joho/godotenv"
 	"github.com/stretchr/gomniauth"
 	"github.com/stretchr/gomniauth/providers/facebook"
 	"github.com/stretchr/gomniauth/providers/github"
@@ -42,15 +43,43 @@ func main() {
 	var addr = flag.String("addr", ":8080", "The addr of the application.")
 	flag.Parse() // parse the flags
 
+	// load environment variables
+	if err := godotenv.Load(); err != nil {
+		log.Print("No .env file found")
+	}
+	fbID, exists := os.LookupEnv("FB_ID")
+	if !exists {
+		log.Print("FB_ID not found")
+	}
+	fbSecret, exixts := os.LookupEnv("FB_SECRET")
+	if !exixts {
+		log.Print("FB_SECRET not found")
+	}
+	githubID, exists := os.LookupEnv("GITHUB_ID")
+	if !exists {
+		log.Print("GITHUB_ID not found")
+	}
+	githubSecret, exists := os.LookupEnv("GITHUB_SECRET")
+	if !exists {
+		log.Print("GITHUB_SECRET not found")
+	}
+	googleID, exists := os.LookupEnv("GOOGLE_ID")
+	if !exists {
+		log.Print("GOOGLE_ID not found")
+	}
+	googleSecret, exists := os.LookupEnv("GOOGLE_SECRET")
+	if !exists {
+		log.Print("GOOGLE_SECRET not found")
+	}
+
 	// setup gomniauth
 	gomniauth.SetSecurityKey("#^dDUR5/NSdSs/k)")
 	gomniauth.WithProviders(
-		facebook.New("1436924783128043", "0d41658904a190e801eca338bc4661b3",
+		facebook.New(fbID, fbSecret,
 			"http://localhost:8080/auth/callback/facebook"),
-		github.New("9775560193e90fecd960", "656ce77b85ebe1b3d8b2fa0a6b11cddc561a9800",
+		github.New(githubID, githubSecret,
 			"http://localhost:8080/auth/callback/github"),
-		google.New("516301198069-io33qbi2edp7360rf7h55tgbp2sa379q.apps.googleusercontent.com",
-			"TBKKQ6TZeEN4byopoICIxkdS",
+		google.New(googleID, googleSecret,
 			"http://localhost:8080/auth/callback/google"),
 	)
 
