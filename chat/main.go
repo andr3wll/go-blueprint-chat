@@ -98,7 +98,7 @@ func main() {
 
 	})
 	// room
-	r := newRoom()
+	r := newRoom(UseGravatarAvatar)
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/room", r)
 	// get the room going
