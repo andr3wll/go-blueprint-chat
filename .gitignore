@@ -37,3 +37,8 @@
 .history
 
 # End of https://www.gitignore.io/api/go,dotenv,visualstudiocode
+
+### Local files ###
+chat/avatars/*
+
+# End of Local files

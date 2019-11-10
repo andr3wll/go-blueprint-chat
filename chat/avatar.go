@@ -1,11 +1,7 @@
 package main
 
 import (
-	"crypto/md5"
 	"errors"
-	"fmt"
-	"io"
-	"strings"
 )
 
 // ErrNoAvatarURL is the error that is returned when the
@@ -52,21 +48,31 @@ func (AuthAvatar) GetAvatarURL(c *client) (string, error) {
 // GravatarAvatar struct
 type GravatarAvatar struct{}
 
-// UseGravatarAvatar struct
+// UseGravatarAvatar variable
 var UseGravatarAvatar GravatarAvatar
 
 // GetAvatarURL method for type GravatarAvatar
 func (GravatarAvatar) GetAvatarURL(c *client) (string, error) {
-	email, ok := c.userData["email"]
-	if !ok {
-		return "", ErrNoAvatarURL
+	if userid, ok := c.userData["userid"]; ok {
+		if useridStr, ok := userid.(string); ok {
+			return "//www.gravatar.com/avatar/" + useridStr, nil
+		}
 	}
-	emailStr, ok := email.(string)
-	if !ok {
-		return "", ErrNoAvatarURL
-	}
+	return "", ErrNoAvatarURL
+}
 
-	m := md5.New()
-	io.WriteString(m, strings.ToLower(emailStr))
-	return fmt.Sprintf("//www.gravatar.com/avatar/%x", m.Sum(nil)), nil
+// FileSystemAvatar struct
+type FileSystemAvatar struct{}
+
+// UseFileSystemAvatar variable
+var UseFileSystemAvatar FileSystemAvatar
+
+// GetAvatarURL method for type FileSystemAvatar
+func (FileSystemAvatar) GetAvatarURL(c *client) (string, error) {
+	if userid, ok := c.userData["userid"]; ok {
+		if useridStr, ok := userid.(string); ok {
+			return "/avatars/" + useridStr + ".jpg", nil
+		}
+	}
+	return "", ErrNoAvatarURL
 }
