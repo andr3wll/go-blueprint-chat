@@ -18,6 +18,13 @@ import (
 	"github.com/stretchr/objx"
 )
 
+// set of the available Avatars
+var avatars Avatar = TryAvatars{
+	UseFileSystemAvatar,
+	UseAuthAvatar,
+	UseGravatar,
+}
+
 // templ represents a single template
 type templateHandler struct {
 	once     sync.Once
@@ -106,7 +113,7 @@ func main() {
 			http.FileServer(http.Dir("./avatars"))))
 
 	// room
-	r := newRoom(UseFileSystemAvatar)
+	r := newRoom()
 	r.tracer = trace.New(os.Stdout)
 	http.Handle("/room", r)
 	// get the room going
